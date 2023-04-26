@@ -17,12 +17,12 @@ with open("dungeon_2.txt", "r") as d:
 with open("dungeon_3.txt", "r") as d:
     dungeon_3 = [list(line.strip()) for line in d.readlines()]
 
+dungeon_explorada = []
+
 janela = Janela(630, 630)
 
 laranja = (255, 69, 0)
 amarelo = (218,165,32)
-
-#janela_dungeon = Janela(420, 420)
 
 agente = Agente([24, 27], mapa)
 
@@ -41,6 +41,7 @@ pendantOfPower = {'obj': pygame.Rect(195, 30, 15, 15), 'sprite': spritePendantOf
 spritePendantOfWisdom = pygame.image.load("images/PendantOfWisdom.png")
 pendantOfWisdom = {'obj': pygame.Rect(195, 45, 15, 15), 'sprite': spritePendantOfWisdom}
 
+custo_total = 0
 CUSTOS = {"g": 10, "a": 20, "f": 100, "m": 150, "w": 180, "#": 0}
 mapa_custo = []
 for i in range(len(mapa)):
@@ -93,41 +94,69 @@ custo1 = sum([mapa_custo[x][y] for x, y in caminho1])
 custo2 = sum([mapa_custo[x][y] for x, y in caminho2])
 custo3 = sum([mapa_custo[x][y] for x, y in caminho3])
 
+print("Custo para a primeira dungeon: ")
 if(custo1 < custo2 and custo1 < custo3):
     primeiro_caminho = caminho1
     agente.pos = dungeons.pop(0)
+    custo_total = custo_total + custo1
+    print(custo1)
 elif(custo2 < custo3 and custo2 < custo1):
     primeiro_caminho = caminho2
     agente.pos = dungeons.pop(1)
+    custo_total = custo_total + custo2
+    print(custo2)
 else:
     primeiro_caminho = caminho3
     agente.pos = dungeons.pop(2)
+    custo_total = custo_total + custo3
+    print(custo3)
 
 posicoes = agente.verifica_dungeon(agente.pos)
 caminho_dungeon1 = agente.a_star(dungeon_custo1, posicoes[0], posicoes[1])
+custo_dungeon = sum([mapa_custo[x][y] for x, y in caminho_dungeon1])
+custo_total = custo_total + custo_dungeon * 2
     
 caminho1 = agente.a_star(mapa_custo, agente.pos, dungeons[0])
 caminho2 = agente.a_star(mapa_custo, agente.pos, dungeons[1])
 custo1 = sum([mapa_custo[x][y] for x, y in caminho1])
 custo2 = sum([mapa_custo[x][y] for x, y in caminho2])
 
+print("Custo para a segunda dungeon: ")
 if(custo1 < custo2):
     segundo_caminho = caminho1
     agente.pos = dungeons.pop(0)
+    custo_total = custo_total + custo1
+    print(custo1)
 else:
     segundo_caminho = caminho2
     agente.pos = dungeons.pop(1)
+    custo_total = custo_total + custo2
+    print(custo2)
 
 posicoes = agente.verifica_dungeon(agente.pos)
 caminho_dungeon2 = agente.a_star(dungeon_custo2, posicoes[0], posicoes[1])
+custo_dungeon = sum([mapa_custo[x][y] for x, y in caminho_dungeon2])
+custo_total = custo_total + custo_dungeon * 2
 
+print("Custo para a terceira dungeon: ")
 terceiro_caminho = agente.a_star(mapa_custo, agente.pos, dungeons[0])
+custo1 = sum([mapa_custo[x][y] for x, y in terceiro_caminho])
+custo_total = custo_total + custo1
 agente.pos = dungeons.pop(0)
+print(custo1)
 
 posicoes = agente.verifica_dungeon(agente.pos)
 caminho_dungeon3 = agente.a_star(dungeon_custo3, posicoes[0], posicoes[1])
+custo_dungeon = sum([mapa_custo[x][y] for x, y in caminho_dungeon3])
+custo_total = custo_total + custo_dungeon * 2
 
 quarto_caminho = agente.a_star(mapa_custo, agente.pos, lost_woods)
+custo1 = sum([mapa_custo[x][y] for x, y in quarto_caminho])
+custo_total = custo_total + custo1
+print("Custo para a lost woods: ")
+print(custo1)
+print("Custo total: ")
+print(custo_total)
 
 execucao = True
 while execucao:

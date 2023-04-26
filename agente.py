@@ -46,7 +46,6 @@ class Agente:
                     custo_g = no_atual.custo_g + mapa[x, y]
                     custo_h = self.distancia_manhattan((x, y), final)
                     novo_no = Node(x, y, custo_g, custo_h, no_atual)
-                    #heapq.heappush(heap, novo_no)
                     heap.append(novo_no)
 
         return None
